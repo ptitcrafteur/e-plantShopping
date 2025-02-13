@@ -25,9 +25,12 @@ export const CartSlice = createSlice({
         itemToUpdate.quantity = quantity;
       }
     },
+    resetAddedToCart: (state, action) => {
+      // This action doesn't need to modify the state, it's just a signal
+    },
   },
 });
 
-export const { addItem, removeItem, updateQuantity } = CartSlice.actions;
+export const { addItem, removeItem, updateQuantity, resetAddedToCart } = CartSlice.actions;
 
 export default CartSlice.reducer;

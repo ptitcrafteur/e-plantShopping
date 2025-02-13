@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import "./ProductList.css";
 import CartItem from "./CartItem";
-import { addItem } from "./CartSlice";
+import { addItem, resetAddedToCart } from "./CartSlice";
 function ProductList() {
   const [showCart, setShowCart] = useState(false);
   const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-  const [addedToCart, setAddedToCart] = useState(false);
+  const [addedToCart, setAddedToCart] = useState({});
   const dispatch = useDispatch();
   const plantsArray = [
     {
@@ -293,6 +293,14 @@ function ProductList() {
     }));
   };
 
+  const handleRemoveFromCart = (productName) => {
+    setAddedToCart((prevState) => ({
+      ...prevState,
+      [productName]: false,
+    }));
+    dispatch(resetAddedToCart());
+  };
+
   return (
     <div>
       <div className="navbar" style={styleObj}>
@@ -358,8 +366,14 @@ function ProductList() {
                     <h2>{plant.name}</h2>
                     <h3>₹{plant.cost}</h3>
                     <p>{plant.description}</p>
-                    <button className="product-button" onClick={() =>handleAddToCart(plant)} disabled={addedToCart[plant.name]}>
-                    {addedToCart[plant.name] ? "Added to Cart" : "Add to Cart"}
+                    <button
+                      className="product-button"
+                      onClick={() => handleAddToCart(plant)}
+                      disabled={addedToCart[plant.name]}
+                    >
+                      {addedToCart[plant.name]
+                        ? "Added to Cart"
+                        : "Add to Cart"}
                     </button>
                   </div>
                 ))}
@@ -368,7 +382,10 @@ function ProductList() {
           ))}
         </div>
       ) : (
-        <CartItem onContinueShopping={handleContinueShopping} />
+        <CartItem
+          onContinueShopping={handleContinueShopping}
+          onRemoveFromCart={handleRemoveFromCart}
+        />
       )}
     </div>
   );
